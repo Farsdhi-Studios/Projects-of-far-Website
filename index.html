@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F&D Company</title>
+    <!-- Fonte retrô do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #004d40; 
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .btn {
+            background: #228B22;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #32CD32;
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background: #1e7a1e;
+        }
+
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 36px;
+            letter-spacing: 2px;
+            color: #FFD700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .story {
+            margin-top: 20px;
+            font-size: 20px;
+            line-height: 1.5;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra superior -->
+    <div class="topbar">
+        <button class="btn" id="gamesBtn">Games</button>
+        <a class="btn" href="https://www.youtube.com/@FarsdhiGaming/" target="_blank">YouTube</a>
+    </div>
+
+    <!-- Conteúdo central -->
+    <div class="content">
+        <div class="title">F&D Company</div>
+        <div class="story">
+            F&D Company is a company founded in <strong>2024</strong>  
+            that makes games in <strong>Brazil</strong>.
+        </div>
+    </div>
+
+    <!-- Música de fundo -->
+    <audio autoplay loop hidden>
+        <source src="Luminesence.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        document.getElementById("gamesBtn").addEventListener("click", () => {
+            alert("Games ainda não faz nada!");
+        });
+    </script>
+</body>
+</html>
