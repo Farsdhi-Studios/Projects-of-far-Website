@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>F&D Company</title>
-    <!-- Fonte retrô do Google Fonts -->
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
@@ -71,13 +73,14 @@
     </style>
 </head>
 <body>
-    <!-- Barra superior -->
+
+    <!-- Top Bar -->
     <div class="topbar">
         <button class="btn" id="gamesBtn">Games</button>
         <a class="btn" href="https://www.youtube.com/@FarsdhiGaming/" target="_blank">YouTube</a>
     </div>
 
-    <!-- Conteúdo central -->
+    <!-- Content -->
     <div class="content">
         <div class="title">F&D Company</div>
         <div class="story">
@@ -86,12 +89,13 @@
         </div>
     </div>
 
-    <!-- Música de fundo -->
+    <!-- Background Music -->
     <audio autoplay loop hidden>
         <source src="Luminesence.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
+        Seu navegador não suporta áudio embutido.
     </audio>
 
+    <!-- Script -->
     <script>
         document.getElementById("gamesBtn").addEventListener("click", () => {
             alert("Games ainda não faz nada!");
