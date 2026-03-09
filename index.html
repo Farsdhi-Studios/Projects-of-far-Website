@@ -1,1 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FD Company - Aero Experience</title>
+    <style>
+        /* ========================
+           RESET & GLOBAL STYLES
+           ======================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            position: relative;
+        }
+
+        /* ========================
+           BEAUTIFUL FIELD SCENERY
+           ======================== */
+        .sky {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #e0f6ff 100%);
+            z-index: -5;
+        }
+
+        /* Sun */
+        .sky::after {
+            content: '';
+            position: absolute;
+            top: 10%; right: 15%;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, #fffdf2 0%, #ffeb3b 40%, rgba(255,235,59,0) 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffeb3b;
+        }
+
+        /* Hills */
+        .hill {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -4;
+        }
+        .hill-1 {
+            width: 120vw; height: 50vh;
+            background: linear-gradient(to bottom, #56ab2f, #a8e063);
+            bottom: -20vh; left: -10vw;
+        }
+        .hill-2 {
+            width: 150vw; height: 60vh;
+            background: linear-gradient(to bottom, #4c9a2a, #2b580c);
+            bottom: -30vh; right: -20vw;
+            z-index: -3;
+        }
+
+        /* Animated Grass Container */
+        #grass-container {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 80px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .grass-blade {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to top, #1e5631, #56ab2f);
+            border-radius: 5px 5px 0 0;
+            transform-origin: bottom;
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(15deg); }
+        }
+
+        /* ========================
+           AERO GLASS UTILITY CLASSES
+           ======================== */
+        .aero-glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            position: relative;
+        }
+
+        /* ========================
+           LANGUAGE SELECTION OVERLAY
+           ======================== */
+        #lang-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+            backdrop-filter: blur(15px);
+        }
+
+        .btn-lang {
+            padding: 20px 40px;
+            margin: 10px;
+            font-size: 1.4rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+        }
+
+        .btn-lang:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ========================
+           MAIN CONTENT CARD
+           ======================== */
+        .main-card {
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+
+        .main-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .company-header {
+            margin-bottom: 20px;
+        }
+
+        .company-logo-text {
+            font-size: 3rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* TEAM SECTION */
+        .team-section {
+            width: 100%;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .team-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .member-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .member-box:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .role-tag {
+            font-size: 0.8rem;
+            color: #ffeb3b;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* BUTTONS */
+        .discord-btn {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(88, 101, 242, 0.5);
+            border: 2px solid #fff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: 0.3s;
+        }
+
+        .discord-btn:hover {
+            background: rgba(88, 101, 242, 0.8);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+        }
+
+        .discord-btn svg { width: 40px; height: 40px; fill: white; }
+
+        .links-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .sub-link {
+            flex: 1;
+            padding: 12px;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .sub-link:hover { background: rgba(255, 255, 255, 0.25); }
+
+        /* EASTER EGGS */
+        .pvz-plant {
+            position: absolute;
+            left: 3%; bottom: 40px;
+            width: 100px; z-index: 5;
+            cursor: pointer;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            animation: bounce 3s infinite alternate;
+        }
+
+        .hidden-isaac {
+            position: absolute;
+            right: 10px; bottom: 10px;
+            width: 40px; opacity: 0.01;
+            cursor: crosshair;
+            z-index: 100;
+        }
+        .hidden-isaac:hover { opacity: 1; }
+
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="Luminesence.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="sky"></div>
+    <div class="hill hill-1"></div>
+    <div class="hill hill-2"></div>
+    <div id="grass-container"></div>
+
+    <!-- START OVERLAY -->
+    <div id="lang-overlay">
+        <h2 style="margin-bottom: 20px; text-shadow: 0 2px 10px #000;">FD COMPANY</h2>
+        <button class="btn-lang" onclick="start('pt')">🇧🇷 Português (Brasileiro)</button>
+        <button class="btn-lang" onclick="start('en')">🇺🇸 English (United States)</button>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="main-card aero-glass" id="main-content">
+        <div class="company-header">
+            <h1 class="company-logo-text">FD Company</h1>
+            <p id="txt-founded">Fundada em 2024</p>
+        </div>
+
+        <!-- DISCORD BUTTON -->
+        <a href="https://discord.gg/5urmKwrz43" target="_blank" class="discord-btn">
+            <svg viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a67.55,67.55,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.1,46,96,53,91.08,65.69,84.69,65.69Z"/></svg>
+            <span id="txt-discord">Servidor do Discord</span>
+        </a>
+
+        <div class="links-row">
+            <a href="https://youtube.com/@farsdhigaming?si=mfRIdebb1Z94LjKN" target="_blank" class="sub-link">YouTube</a>
+            <a href="https://fd-company.itch.io/" target="_blank" class="sub-link">Itch.io</a>
+        </div>
+
+        <!-- TEAM SECTION -->
+        <div class="team-section">
+            <h2 class="team-title" id="txt-team">Equipe</h2>
+            <div class="team-grid">
+                <!-- Owners -->
+                <div class="member-box">
+                    <span class="role-tag">Owner</span>
+                    <span class="member-name">farsdhi</span>
+                </div>
+                <div class="member-box">
+                    <span class="role-tag">Co-Owner</span>
+                    <span class="member-name">dhlox</span>
+                </div>
+                <div class="member-box">
+                    <span class="role-tag">Co-Owner</span>
+                    <span class="member-name">Ghostx(foxy)</span>
+                </div>
+                
+                <!-- Artists / Testers -->
+                <div class="member-box">
+                    <span class="role-tag" id="tag-ta">Artists & Testers</span>
+                    <span class="member-name">martim, bola, prince, stefhan, tommy, shiba</span>
+                </div>
+
+                <!-- Composers -->
+                <div class="member-box">
+                    <span class="role-tag" id="tag-comp">Composer</span>
+                    <span class="member-name">dhlox</span>
+                </div>
+                <div class="member-box">
+                    <span class="role-tag" id="tag-comp2">Composer</span>
+                    <span class="member-name">mat</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PVZ PLANT SVG -->
+    <svg class="pvz-plant" viewBox="0 0 100 100" onclick="alert('PvZ!')">
+        <circle cx="50" cy="50" r="22" fill="#32CD32"/>
+        <path d="M60 55 L85 55" stroke="#32CD32" stroke-width="18" stroke-linecap="round"/>
+        <circle cx="85" cy="55" r="5" fill="#000"/>
+        <circle cx="45" cy="45" r="4" fill="#000"/>
+        <circle cx="55" cy="45" r="4" fill="#000"/>
+        <path d="M50 72 L50 95" stroke="#228B22" stroke-width="6"/>
+        <path d="M30 90 Q50 80 70 90" stroke="#228B22" stroke-width="4" fill="none"/>
+    </svg>
+
+    <!-- HIDDEN ISAAC SVG -->
+    <svg class="hidden-isaac" viewBox="0 0 100 100" onclick="alert('Found Isaac!')">
+        <circle cx="50" cy="50" r="40" fill="#fcdbb3"/>
+        <circle cx="35" cy="45" r="8" fill="#000"/>
+        <circle cx="65" cy="45" r="8" fill="#000"/>
+        <path d="M35 55 L35 80 M65 55 L65 80" stroke="#00bfff" stroke-width="5" opacity="0.8"/>
+    </svg>
+
+    <script>
+        const translations = {
+            pt: {
+                founded: "Fundada em 2024",
+                discord: "Servidor do Discord",
+                team: "Membros da Equipe",
+                artists: "Artistas & Testers",
+                composer: "Compositor"
+            },
+            en: {
+                founded: "Founded in 2024",
+                discord: "Discord Server",
+                team: "Team Members",
+                artists: "Artists & Testers",
+                composer: "Composer"
+            }
+        };
+
+        function start(lang) {
+            document.getElementById('txt-founded').innerText = translations[lang].founded;
+            document.getElementById('txt-discord').innerText = translations[lang].discord;
+            document.getElementById('txt-team').innerText = translations[lang].team;
+            document.getElementById('tag-ta').innerText = translations[lang].artists;
+            document.getElementById('tag-comp').innerText = translations[lang].composer;
+            document.getElementById('tag-comp2').innerText = translations[lang].composer;
+
+            document.getElementById('bg-music').play();
+            document.getElementById('lang-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('lang-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.add('visible');
+            }, 800);
+        }
+
+        // Animated Grass Generation
+        const container = document.getElementById('grass-container');
+        for (let i = 0; i < 120; i++) {
+            const blade = document.createElement('div');
+            blade.className = 'grass-blade';
+            blade.style.left = Math.random() * 100 + 'vw';
+            blade.style.height = (Math.random() * 30 + 20) + 'px';
+            blade.style.animationDelay = (Math.random() * 3) + 's';
+            blade.style.background = `linear-gradient(to top, #1e5631, ${Math.random() > 0.5 ? '#56ab2f' : '#3d8c24'})`;
+            container.appendChild(blade);
+        }
+    </script>
+</body>
+</html>
 
